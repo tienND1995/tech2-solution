@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css'
-import './Currency.scss'
+import './Currency.css'
 
 export class Currency extends Component {
   constructor() {
