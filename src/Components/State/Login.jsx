@@ -61,6 +61,8 @@ export class Login extends Component {
     const { form, errors } = this.state
     const { email, password } = form
 
+    console.log(this.state)
+
     return (
       <div className="container">
         <div className="row justify-content-center mt-5">

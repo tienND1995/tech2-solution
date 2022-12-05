@@ -1,8 +1,8 @@
 import React from 'react'
-import Home from './Components/Pages/Home/Home'
+import Currency from './Components/Currency/Currency'
 
 function App(props) {
-  return <Home />
+  return <Currency/>
 }
 
 export default App
