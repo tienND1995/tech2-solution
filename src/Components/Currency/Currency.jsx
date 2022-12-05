@@ -31,32 +31,50 @@ export class Currency extends Component {
     this.setState({ value: data })
   }
 
-  handleClick = () => {
-    const inputElement = document.querySelectorAll('.form-control')
-    const dataName = { ...this.state.name }
-    const dataValue = { ...this.state.value }
+  // handleClick = () => {
+  //   const inputElement = document.querySelectorAll('.form-control')
+  //   const dataName = { ...this.state.name }
+  //   const dataValue = { ...this.state.value }
 
-    // update name
-    for (let index = 0; index < inputElement.length; index++) {
-      const element = inputElement[index]
+  //   if (inputElement[0].name === 'vnd') {
+  //     dataValue.usd = 1
+  //     dataValue.vnd = 24
 
-      if (element.name === 'usd') {
-        dataName.nameUsd = 'vnd'
-        dataName.nameVnd = 'usd'
+  //     console.log(dataValue)
+  //   }
+  //   if (inputElement[0].name === 'usd') {
+  //     dataValue.vnd = 1
+  //     dataValue.usd = 1 / 24
 
-        break
-      } else {
-        dataName.nameUsd = 'usd'
-        dataName.nameVnd = 'vnd'
+  //     console.log(dataValue)
+  //   }
 
-        break
-      }
-    }
+  //   // update name
+  //   for (let index = 0; index < inputElement.length; index++) {
+  //     const element = inputElement[index]
 
-    this.setState({
-      name: dataName,
-    })
-  }
+  //     if (element.name === 'usd') {
+  //       dataName.nameUsd = 'vnd'
+  //       dataName.nameVnd = 'usd'
+
+  //       break
+  //     } else {
+  //       dataName.nameUsd = 'usd'
+  //       dataName.nameVnd = 'vnd'
+
+  //       break
+  //     }
+  //   }
+
+  //   this.setState({
+  //     name: dataName,
+  //   })
+
+  //   this.setState({
+  //     value: dataValue,
+  //   })
+  // }
+
 
   render() {
     const { value, name } = this.state
@@ -98,7 +116,6 @@ export class Currency extends Component {
                     type="button"
                     id="swap_button"
                     className="btn btn-lg btn-primary"
-                    onClick={this.handleClick}
                   >
                     <strong>⇄</strong>
                   </button>
