@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css'
-import './Currency.css'
+// import './Currency.scss'
 
 export class Currency extends Component {
   constructor() {
@@ -31,49 +31,7 @@ export class Currency extends Component {
     this.setState({ value: data })
   }
 
-  // handleClick = () => {
-  //   const inputElement = document.querySelectorAll('.form-control')
-  //   const dataName = { ...this.state.name }
-  //   const dataValue = { ...this.state.value }
-
-  //   if (inputElement[0].name === 'vnd') {
-  //     dataValue.usd = 1
-  //     dataValue.vnd = 24
-
-  //     console.log(dataValue)
-  //   }
-  //   if (inputElement[0].name === 'usd') {
-  //     dataValue.vnd = 1
-  //     dataValue.usd = 1 / 24
-
-  //     console.log(dataValue)
-  //   }
-
-  //   // update name
-  //   for (let index = 0; index < inputElement.length; index++) {
-  //     const element = inputElement[index]
-
-  //     if (element.name === 'usd') {
-  //       dataName.nameUsd = 'vnd'
-  //       dataName.nameVnd = 'usd'
-
-  //       break
-  //     } else {
-  //       dataName.nameUsd = 'usd'
-  //       dataName.nameVnd = 'vnd'
-
-  //       break
-  //     }
-  //   }
-
-  //   this.setState({
-  //     name: dataName,
-  //   })
-
-  //   this.setState({
-  //     value: dataValue,
-  //   })
-  // }
+  
 
 
   render() {
