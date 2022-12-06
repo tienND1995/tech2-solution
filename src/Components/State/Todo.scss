@@ -1,0 +1,13 @@
+.todo-list {
+  > .todo-item {
+    &.completed {
+      .name-work {
+        text-decoration: line-through;
+      }
+    }
+
+    span:last-child {
+        color: red;
+    }
+  }
+}
