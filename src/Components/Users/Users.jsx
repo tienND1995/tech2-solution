@@ -89,6 +89,24 @@ export class Users extends Component {
     }
   }
 
+  // remove user
+  removeUser = async (id) => {
+    const res = await fetch(`${SERVER_API}/users/${id}`, {
+      method: 'DELETE',
+    })
+
+    if (res.ok) {
+      toast.success('🦄 Hải, Quay xe!')
+      this.dispatchName('remove')
+    }
+  }
+
+  // * handle remove
+  handleRemove = (id) => {
+    alert('Em muốn chia tay sao ?')
+    this.removeUser(id)
+  }
+
   // dispatch name
   dispatchName = (event) => {
     this.setState({
@@ -235,10 +253,10 @@ export class Users extends Component {
           </thead>
           <tbody>
             {userList.length > 0 &&
-              userList.map(({ id, name, email, status }) => {
+              userList.map(({ name, email, status, id }, index) => {
                 return (
                   <tr key={id}>
-                    <th scope="row">{id}</th>
+                    <th scope="row">{index + 1}</th>
                     <td>
                       <input type="checkbox" />
                     </td>
@@ -257,19 +275,26 @@ export class Users extends Component {
                           this.handleShowEdit(id)
                         }}
                         href="#"
-                        className="edit btn btn-warning"
+                        className="btn btn-warning"
                       >
                         Sửa
                       </a>
                     </td>
                     <td>
-                      <a href="#" className="remove btn btn-danger">
+                      <a
+                        href="#"
+                        className="btn btn-danger"
+                        onClick={() => {
+                          this.handleRemove(id)
+                        }}
+                      >
                         Xóa
                       </a>
                     </td>
                   </tr>
                 )
-              })}
+              })
+            }
           </tbody>
         </table>
 
