@@ -4,6 +4,8 @@ import './Todo.scss'
 
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import { v4 as uuidv4 } from 'uuid'
+console.log('v4', uuidv4)
 
 export class Todo extends Component {
   constructor() {
@@ -35,6 +37,7 @@ export class Todo extends Component {
         name: '',
         todoList: this.state.todoList.concat(todo),
       })
+
       e.target.reset()
       toast.success('Thêm thành công !')
     } else {
@@ -56,13 +59,10 @@ export class Todo extends Component {
     toast.success('Xoá thành công !')
   }
 
-  handleChecked = (e, id) => {
-    const isChecked = e.target.checked
+  handleChecked = (status, id) => {
     const data = [...this.state.todoList]
     data.forEach((todo) => {
-      if (todo.id === id) {
-        todo.isCompeleted = isChecked
-      }
+      todo.id === id && (todo.isCompeleted = status)
     })
 
     this.setState({
@@ -90,7 +90,7 @@ export class Todo extends Component {
                     <input
                       type="checkbox"
                       onChange={(e) => {
-                        this.handleChecked(e, id)
+                        this.handleChecked(e.target.checked, id)
                       }}
                     />
                     <span className="mx-3">{name}</span>

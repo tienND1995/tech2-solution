@@ -1,9 +1,9 @@
 import React from 'react'
-import Currency from './Components/Currency/Currency'
 import Todo from './Components/State/Todo'
+import Users from './Components/Users/Users'
 
-function App(props) {
-  return <Todo />
+
+
+export default function App() {
+  return <Users/>
 }
-
-export default App
