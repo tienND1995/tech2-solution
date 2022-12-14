@@ -8085,7 +8085,7 @@ react-app-polyfill@^3.0.0:
 
 react-bootstrap@^2.7.0:
   version "2.7.0"
-  resolved "https://registry.yarnpkg.com/react-bootstrap/-/react-bootstrap-2.7.0.tgz#4a8f0311bccac477dc925366763c536f46e4393b"
+  resolved "https://registry.npmjs.org/react-bootstrap/-/react-bootstrap-2.7.0.tgz"
   integrity sha512-Jcrn6aUuRVBeSB6dzKODKZU1TONOdhAxu0IDm4Sv74SJUm98dMdhSotF2SNvFEADANoR+stV+7TK6SNX1wWu5w==
   dependencies:
     "@babel/runtime" "^7.17.2"
@@ -9175,6 +9175,11 @@ svgo@^2.7.0:
     csso "^4.2.0"
     picocolors "^1.0.0"
     stable "^0.1.8"
+
+sweetalert2@^11.6.15:
+  version "11.6.15"
+  resolved "https://registry.yarnpkg.com/sweetalert2/-/sweetalert2-11.6.15.tgz#0459e97100810b0734c62d2cce4d3d41c8f30b0a"
+  integrity sha512-FqMy1gRGHEI5G145NE5XSP059TziCJu9Xf9/mkki/aKu5pLNcYzjggOzKO5Ex10EBgAGDXQ99jyGfYYzGCYXRQ==
 
 symbol-tree@^3.2.4:
   version "3.2.4"
