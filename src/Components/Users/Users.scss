@@ -11,3 +11,18 @@ table {
     }
   }
 }
+
+#pagination {
+  ul {
+    margin-bottom: 0;
+    li.page-item {
+      cursor: not-allowed !important;
+      a {
+        &.disabled {
+          pointer-events: none !important;
+          cursor: not-allowed !important;
+        }
+      }
+    }
+  }
+}

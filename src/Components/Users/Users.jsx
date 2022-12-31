@@ -30,51 +30,55 @@ export class Users extends Component {
       currentId: null,
 
       filters: {},
-      pagination: {},
+      paginate: {
+        maxPage: null,
+        currenPage: 1,
+      },
       listId: [],
     }
+
+    this.perPage = 3
   }
 
   componentDidMount() {
-    this.getUser()
-    // this.getUser()
+    const { currenPage } = this.state.paginate
+    const { filters } = this.state
+    this.getUser(filters, this.perPage, currenPage)
   }
 
   componentDidUpdate(prevProps, prevState) {
     if (prevState.event !== this.state.event) {
-      const { filters, pagination } = this.state
-      const { page, limit } = pagination
+      const { currenPage } = this.state.paginate
+      const { filters } = this.state
 
-      this.getUser(filters, limit, page)
+      this.getUser(filters, this.perPage, currenPage)
       this.setState({
-        event: '',
+        event: null,
       })
     }
   }
 
   // render list user
-  getUser = async (filters = {}, limit = 3, page = 2) => {
-    const { pagination } = this.state
-    pagination.limit = limit
-    pagination.page = page
-
-    let params = `?_limit=${limit}&_page=${page}`
-    let url = `${SERVER_API}/users`
+  getUser = async (filters = {}, limit = 3, page = 1) => {
+    let url = `${SERVER_API}/users?_limit=${limit}&_page=${page}`
     if (Object.keys(filters).length) {
-      params += '&' + new URLSearchParams(filters).toString()
+      url =
+        `${SERVER_API}/users?_limit=${limit}&_page=${page}&` +
+        new URLSearchParams(filters).toString()
     }
 
-    const res = await fetch(url + params)
+    const res = await fetch(url)
     const users = await res.json()
 
     if (res.ok) {
       const totalCount = res.headers.get('x-total-count')
       const maxPage = Math.ceil(totalCount / limit)
-      pagination.maxPage = maxPage
+      const paginate = this.state.paginate
+      paginate.maxPage = maxPage
 
       this.setState({
         userList: users,
-        pagination: pagination,
+        paginate: paginate,
       })
     }
   }
@@ -118,45 +122,93 @@ export class Users extends Component {
     })
 
     if (res.ok) {
+      const paginate = this.state.paginate
+      paginate.currenPage = 1
+
+      this.setState({
+        paginate: paginate,
+      })
+
       this.dispatchName('remove')
     }
   }
 
-  // * handle click pagination
-  handlePagination = (currentPage, classBtn) => {
-    const { filters, pagination } = this.state
-    const { limit } = pagination
+  // * render paginate
+  renderPaginate = () => {
+    const { paginate } = { ...this.state }
+    const { currenPage, maxPage } = paginate
 
-    classBtn.includes('number') && this.getUser(filters, limit, currentPage)
-    classBtn.includes('prev') && this.getUser(filters, limit, currentPage - 1)
-    classBtn.includes('next') && this.getUser(filters, limit, currentPage + 1)
+    const goPaginate = (page, classBtn) => {
+      classBtn.includes('number') && (paginate.currenPage = page)
+      classBtn.includes('prev') && (paginate.currenPage = page - 1)
+      classBtn.includes('next') && (paginate.currenPage = page + 1)
+
+      this.setState({
+        paginate: paginate,
+      })
+
+      this.dispatchName('go paginate')
+    }
+
+    const paginateItems = []
+    for (let page = 1; page <= maxPage; page++) {
+      paginateItems.push(
+        <li className="page-item" key={page}>
+          <a
+            className={`page-link number ${
+              page === currenPage ? 'active' : ''
+            } `}
+            href="#"
+            onClick={(e) => {
+              e.preventDefault()
+              const classBtn = e.target.className
+              goPaginate(page, classBtn)
+            }}
+          >
+            {page}
+          </a>
+        </li>
+      )
+    }
+
+    return (
+      <ul className="pagination">
+        <li className="page-item">
+          <a
+            className={`page-link prev ${currenPage <= 1 ? 'disabled' : ''}`}
+            href="#"
+            onClick={(e) => {
+              e.preventDefault()
+              const classBtn = e.target.className
+              goPaginate(currenPage, classBtn)
+            }}
+          >
+            Previous
+          </a>
+        </li>
+
+        {paginateItems}
+
+        <li className="page-item">
+          <a
+            className={`page-link next ${
+              currenPage < maxPage ? '' : 'disabled'
+            }`}
+            href="#"
+            onClick={(e) => {
+              e.preventDefault()
+              const classBtn = e.target.className
+              goPaginate(currenPage, classBtn)
+            }}
+          >
+            Next
+          </a>
+        </li>
+      </ul>
+    )
   }
 
   // handle checked
-  handleChangeChecked = (status, id) => {
-    const { listId } = this.state
-    if (status) {
-      listId.push(id)
-    } else {
-      listId.forEach((number, index) => {
-        number === id && listId.splice(index, 1)
-      })
-    }
-
-    this.setState({
-      listId: listId,
-    })
-
-    const btnRemoveAll = document.querySelector('.remove-all')
-    listId.length === 0
-      ? (btnRemoveAll.disabled = true)
-      : (btnRemoveAll.disabled = false)
-  }
-
-  handleRemoveAll = () => {
-    const { listId } = this.state
-    console.log(listId)
-  }
 
   // * handle remove
   handleRemove = (id) => {
@@ -221,10 +273,10 @@ export class Users extends Component {
   // * handle form filter
   handleFormFilter = (e) => {
     e.preventDefault()
-    const { filters, pagination } = this.state
-    const { page, limit } = pagination
+    const { filters, paginate } = this.state
+    const { currenPage } = paginate
 
-    this.getUser(filters, limit, page)
+    this.getUser(filters, this.perPage, currenPage)
   }
 
   handleChangeFilter = (e) => {
@@ -316,9 +368,9 @@ export class Users extends Component {
   }
 
   render() {
-    const { userList, errors, user, currentId, modal, listId, pagination } =
+    const { userList, errors, user, currentId, modal, listId, paginate } =
       this.state
-    const { page, maxPage } = pagination
+    const { currenPage, maxPage } = paginate
     const { name, email, status } = user
 
     return (
@@ -390,12 +442,7 @@ export class Users extends Component {
                   <tr key={id}>
                     <th scope="row">{index + 1}</th>
                     <td>
-                      <input
-                        type="checkbox"
-                        onChange={(e) => {
-                          this.handleChangeChecked(e.target.checked, id)
-                        }}
-                      />
+                      <input type="checkbox" />
                     </td>
                     <td>{name}</td>
                     <td>{email}</td>
@@ -437,82 +484,11 @@ export class Users extends Component {
         </table>
 
         <div className="d-flex justify-content-between mb-3">
-          <button
-            type="button"
-            className="btn btn-danger remove-all"
-            onClick={this.handleRemoveAll}
-            disabled={true}
-          >
+          <button type="button" className="btn btn-danger remove-all">
             Xóa đã trọn {listId.length}
           </button>
 
-          <div id="pagination">
-            <ul className="pagination">
-              {page > 1 ? (
-                <li className="page-item">
-                  <a
-                    className="page-link prev"
-                    href="#"
-                    onClick={(e) => {
-                      e.preventDefault()
-                      const currentPage = e.target.innerText
-                      const classBtn = e.target.className
-                      this.handlePagination(currentPage, classBtn)
-                    }}
-                  >
-                    Previous
-                  </a>
-                </li>
-              ) : (
-                ''
-              )}
-
-              {maxPage > 0 &&
-                Array(maxPage)
-                  .fill(1)
-                  .map((number, index) => {
-                    return (
-                      <li className="page-item" key={index}>
-                        <a
-                          className={
-                            page === index + 1
-                              ? 'page-link active number'
-                              : 'page-link number'
-                          }
-                          href="#"
-                          onClick={(e) => {
-                            e.preventDefault()
-                            const currentPage = Number(e.target.innerText)
-                            const classBtn = e.target.className
-                            this.handlePagination(currentPage, classBtn)
-                          }}
-                        >
-                          {index + 1}
-                        </a>
-                      </li>
-                    )
-                  })}
-
-              {page < maxPage ? (
-                <li className="page-item">
-                  <a
-                    className="page-link next"
-                    href="#"
-                    onClick={(e) => {
-                      e.preventDefault()
-                      const currentPage = e.target.innerText
-                      const classBtn = e.target.className
-                      this.handlePagination(currentPage, classBtn)
-                    }}
-                  >
-                    Next
-                  </a>
-                </li>
-              ) : (
-                ''
-              )}
-            </ul>
-          </div>
+          <div id="pagination">{this.renderPaginate()}</div>
         </div>
 
         <Modal show={modal} onHide={this.hideModal}>
